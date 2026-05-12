@@ -219,6 +219,8 @@ Delay_Risk = Delay_from_due_date * Num_of_Delayed_Payment
 
 Type_of_Loan 변수는 unique 값이 6000개 이상 존재하였으나, 실제 loan 종류는 약 10개 수준이었다.
 
+Type_of_Loan 변수는 6261개의 조합형 범주를 가지므로 직접 인코딩 시 희소성과 정보 손실 문제가 발생할 수 있다고 판단하였다. 따라서 개별 대출 유형을 분리하여 금융 행동 특성을 반영하고자 하였다. 특히 payday loan, debt consolidation loan 등은 금융 부담 가능성을 나타내며, mortgage loan 및 home equity loan은 자산 기반 고객 특성을 반영할 수 있다고 가정하였다.
+
 예시:
 
 ```text
@@ -254,7 +256,7 @@ High_spent_Small_value_payments
 - Spent_Level
 - Payment_Size
 
-소비 수준과 결제 규모를 독립적으로 학습할 수 있도록 구성하였다.
+소비 수준(high, low)과 결제 규모(small, medium, large)를 독립적으로 학습할 수 있도록 구성하였다.
 
 ---
 
@@ -413,7 +415,7 @@ attention 기반 feature selection과 categorical embedding을 지원한다.
 
 # 9. Feature Importance
 
-(이미지 첨부)
+<img width="1137" height="701" alt="image" src="https://github.com/user-attachments/assets/865ab387-4088-43b2-b2e7-032bf1937362" />
 
 ### 해석
 
