@@ -104,84 +104,100 @@ EDA
 
 # 5. EDA
 
-## 📊 Credit Score 분포
 
-<img width="205" height="191" alt="image" src="https://github.com/user-attachments/assets/2feb646f-916a-4f37-b605-54dae65ebcff" />
+## 📊 Credit Score Distribution
 
+<img width="713" height="470" alt="image" src="https://github.com/user-attachments/assets/0b9741b5-e2cc-486e-8a1a-f36edf21d88f" />
 
-### 해석
+Standard 클래스 비율이 가장 높게 나타났다.
 
-- Standard 클래스 비율이 가장 높게 나타남
-- 클래스 비율 차이가 존재하여 train / validation split 시 stratify 적용
-
----
-
-## 📊 금액형 변수 분포
-
-<img width="1987" height="2855" alt="image" src="https://github.com/user-attachments/assets/21fa967e-69d9-43e1-9580-3795c565327a" />
-
-
-### 해석
-
-Annual_Income, Outstanding_Debt, Monthly_Balance 등의 금액형 변수는 우측 꼬리가 긴 분포를 보였다.
-
-금융 데이터 특성상 큰 값 자체가 의미를 가질 수 있다고 판단하여 이상치 제거보다는 로그 변환을 적용하였다.
-
-### 적용 변수
-
-- Annual_Income
-- Monthly_Inhand_Salary
-- Outstanding_Debt
-- Total_EMI_per_month
-- Amount_invested_monthly
-- Monthly_Balance
+클래스 비율 차이가 존재하였기 때문에
+train / validation split 과정에서 stratify 옵션을 적용하였다.
 
 ---
 
-## 📊 Outstanding_Debt와 Credit Score 관계
+## 📊 Outstanding Debt by Credit Score (원본값)
 
-(이미지 첨부)
+<img width="704" height="470" alt="image" src="https://github.com/user-attachments/assets/2b4b2692-5a6b-48c5-9dcd-a759f9dce283" />
 
-### 해석
+Poor 등급 고객에서 Outstanding_Debt 수준이 상대적으로 높게 나타났다.
 
-Outstanding_Debt가 높은 고객일수록 Poor 등급 비율이 높게 나타났다.
+단순 부채 절대값보다
+소득 대비 금융 부담 수준이 중요하다고 판단하여
+Debt_to_Income 파생변수를 생성하였다.
 
-단순 부채 금액보다 소득 대비 부채 부담이 더 중요하다고 판단하여 다음 파생변수를 생성하였다.
 
-```python
-Debt_to_Income = Outstanding_Debt / Annual_Income
-```
 
 ---
 
-## 📊 Delay 관련 변수 분석
+## 📊 Delay from Due Date by Credit Score
 
-(이미지 첨부)
+<img width="687" height="470" alt="image" src="https://github.com/user-attachments/assets/6eb4cad7-52a7-484c-a9ea-95f8e2ce0eb5" />
 
-### 해석
+Poor 등급일수록 Delay_from_due_date의 중앙값과 분포 범위가 높게 나타났다.
 
-- Delay_from_due_date
-- Num_of_Delayed_Payment
-
-두 변수 모두 신용등급과 관련성이 높게 나타났다.
-
-특히 연체일수와 연체횟수가 동시에 증가할 경우 위험도가 더 커질 수 있다고 판단하여 다음 변수를 추가하였다.
-
-```python
-Delay_Risk = Delay_from_due_date * Num_of_Delayed_Payment
-```
+연체일수와 연체횟수를 함께 반영하기 위해
+Delay_Risk 변수를 추가하였다.
 
 ---
 
-## 📊 Correlation Analysis
+## 📊 Correlation Heatmap
 
-(이미지 첨부)
+<img width="1079" height="853" alt="image" src="https://github.com/user-attachments/assets/cd3abb71-b0ec-49c3-b261-0ed4c353b872" />
 
-### 해석
+Debt_to_Income와 Delay_Risk는
+기존 변수와 높은 상관성을 보였으며,
+금융 부담 수준과 연체 위험도를 보다 직접적으로 반영하였다.
 
-상관계수 분석은 변수 제거 목적보다는 변수 간 관계를 파악하고 파생변수 생성 아이디어를 얻기 위한 용도로 활용하였다.
 
-본 프로젝트는 딥러닝 기반 모델을 사용하였기 때문에, 선형 모델처럼 상관계수만을 기준으로 변수 제거를 진행하지는 않았다.
+파생변수 생성 이후에도 원본 변수는 제거하지 않았다.
+
+원본 변수는 절대 규모 정보를,
+파생변수는 상대적인 금융 부담 정보를 반영할 수 있다고 판단하였다.
+
+또한 딥러닝 기반 모델에서는 변수 간 interaction이 중요할 수 있기 때문에
+단순 상관계수만을 기준으로 변수 제거를 진행하지 않았다.
+
+
+---
+
+## 📊 Loan Count by Credit Score
+
+<img width="868" height="547" alt="image" src="https://github.com/user-attachments/assets/a769faee-ca3a-420c-9404-576b281ef587" />
+
+Loan_Count가 증가할수록
+Poor 등급 비율이 증가하는 경향이 나타났다.
+
+단순 대출 개수뿐 아니라
+대출 종류 자체도 중요하다고 판단하여
+loan 종류별 binary feature를 생성하였다.
+
+
+---
+
+## 📊 Monthly Balance diff1 Distribution
+
+<img width="868" height="547" alt="image" src="https://github.com/user-attachments/assets/f2354ccd-3510-4838-8b08-aac9f47ddf6c" />
+
+고객별 월별 잔고 변화량이 크게 나타나는 경우가 존재하였다.
+
+단일 시점 정보보다
+금융 상태 변화 흐름 자체가 중요할 수 있다고 판단하여
+diff 기반 시계열 요약 변수를 추가하였다.
+
+
+---
+
+## 📊 Outstanding Debt Mean by Customer
+
+<img width="859" height="547" alt="image" src="https://github.com/user-attachments/assets/ad95592f-4086-4555-a434-165455fdb7c9" />
+
+고객별 평균 Outstanding_Debt 수준은
+신용등급에 따라 차이를 보이는 경향이 나타났다.
+
+단일 월 데이터보다
+고객의 장기 평균 금융 상태가
+신용 패턴을 더 안정적으로 반영할 수 있다고 판단하였다.
 
 ---
 
@@ -219,14 +235,16 @@ Delay_Risk = Delay_from_due_date * Num_of_Delayed_Payment
 
 ## ✅ 3) Loan Parsing
 
-Type_of_Loan 변수는 unique 값이 6000개 이상 존재하였으나, 실제 loan 종류는 약 10개 수준이었다.
+Type_of_Loan 변수는 6261개의 조합형 범주를 가지기 때문에
+직접 encoding할 경우 희소성이 커질 수 있다고 판단하였다.
 
-Type_of_Loan 변수는 6261개의 조합형 범주를 가지므로 직접 인코딩 시 희소성과 정보 손실 문제가 발생할 수 있다고 판단하였다. 따라서 개별 대출 유형을 분리하여 금융 행동 특성을 반영하고자 하였다. 특히 payday loan, debt consolidation loan 등은 금융 부담 가능성을 나타내며, mortgage loan 및 home equity loan은 자산 기반 고객 특성을 반영할 수 있다고 가정하였다.
+또한 대출 개수와 대출 종류 자체가 고객의 금융 상태를 반영할 수 있다고 판단하여,
+문자열 parsing을 통해 loan 종류별 binary feature를 생성하였다.
 
 예시:
 
 ```text
-Auto Loan, Mortgage Loan, Student Loan
+Auto Loan, Mortgage Loan, Student Loan, Payday Loan
 ```
 
 따라서 문자열 parsing을 통해 다음과 같은 binary feature로 재구성하였다.
@@ -253,7 +271,7 @@ Auto Loan, Mortgage Loan, Student Loan
 High_spent_Small_value_payments
 ```
 
-형태를 다음 두 변수로 분리하였다.
+기존 변수는 소비 수준과 결제 규모 정보가 함께 포함된 형태였고, 형태를 다음 두 변수로 분리하였다.
 
 - Spent_Level
 - Payment_Size
@@ -413,6 +431,9 @@ attention 기반 feature selection과 categorical embedding을 지원한다.
 | Exp11 | Deep MLP 튜닝 + EarlyStopping | MLP++ | 83.14 |
 | Exp12 | 추가 금융 변수 적용 + Deep MLP | MLP Final | **83.36** |
 
+일부 실험에서는 단순 파생변수 추가만으로는 성능 향상이 크지 않았으며,
+변수 조합과 모델 구조 최적화가 함께 이루어질 때 성능 개선 효과가 크게 나타났다.
+
 ---
 
 # 9. Feature Importance
@@ -428,11 +449,26 @@ attention 기반 feature selection과 categorical embedding을 지원한다.
 
 등이 높은 중요도를 보였다.
 
-특히 고객별 mean / diff 기반 변수들이 성능 향상에 크게 기여하였다.
+특히 고객별 mean / diff 기반 변수들이 높은 중요도를 보이며
+시계열 정보가 성능 향상에 기여한 것을 확인할 수 있었다.
 
 ---
+# 10. 최종 모델
 
-# 10. 최종 모델 성능
+## 🔹 Final MLP Setting
+
+### model Setting
+
+| Parameter | Value |
+|---|---|
+| Optimizer | NAdam |
+| Loss Function | CrossEntropyLoss |
+| Scheduler | ReduceLROnPlateau |
+| Batch Size | 256 |
+| Early Stopping | 적용 |
+| Epoch | 150 |
+
+### 최종 모델 성능
 
 | Metric | Score |
 |---|---|
@@ -446,6 +482,7 @@ attention 기반 feature selection과 categorical embedding을 지원한다.
 - 고객별 평균 금융 상태(mean)와 최근 변화량(diff)이 신용점수 예측에 유의미하게 작용하였다.
 - categorical embedding이 범주형 변수 표현에 효과적이었다.
 - 시계열 요약 feature 추가 이후 가장 큰 성능 향상을 확인할 수 있었다.
+- Feature Importance 기반 변수 제거 이후 일부 성능 감소가 발생하였다.
 
 ---
 
