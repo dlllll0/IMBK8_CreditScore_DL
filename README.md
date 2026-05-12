@@ -1,4 +1,4 @@
-<img width="704" height="470" alt="image" src="https://github.com/user-attachments/assets/79bb83bb-2a27-4034-b8e0-48de16b9f813" /><img width="859" height="547" alt="image" src="https://github.com/user-attachments/assets/9ba5dba2-f73e-4b28-bfde-4895d94d1bbf" /># 🏦 Credit Score Prediction using Deep Learning
+# 🏦 Credit Score Prediction using Deep Learning
 
 > Kaggle 신용점수 데이터를 활용하여 고객의 금융 상태, 소비 패턴, 월별 변화 흐름을 기반으로 신용점수를 예측한 딥러닝 기반 Tabular AI 프로젝트
 
