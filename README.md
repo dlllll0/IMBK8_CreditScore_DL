@@ -106,7 +106,8 @@ EDA
 
 ## 📊 Credit Score 분포
 
-(이미지 첨부)
+<img width="205" height="191" alt="image" src="https://github.com/user-attachments/assets/2feb646f-916a-4f37-b605-54dae65ebcff" />
+
 
 ### 해석
 
@@ -117,7 +118,8 @@ EDA
 
 ## 📊 금액형 변수 분포
 
-(이미지 첨부)
+<img width="1987" height="2855" alt="image" src="https://github.com/user-attachments/assets/21fa967e-69d9-43e1-9580-3795c565327a" />
+
 
 ### 해석
 
